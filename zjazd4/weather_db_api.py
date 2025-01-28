@@ -1,10 +1,9 @@
-import random
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from fastapi import FastAPI
-import uvicorn
+from zjazd4 import uvicorn1
 
 app = FastAPI()
 

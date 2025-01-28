@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 from fastapi import FastAPI
-import uvicorn
+from zjazd4 import uvicorn1
 
 app = FastAPI()
 
