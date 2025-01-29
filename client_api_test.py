@@ -1,9 +1,7 @@
 from datetime import datetime
 from fastapi.responses import HTMLResponse
-from enum import Enum
 
-from pydantic import BaseModel
-from fastapi import FastAPI, Response, HTTPException
+from fastapi import FastAPI, Response
 import uvicorn
 
 app = FastAPI()
@@ -19,7 +17,6 @@ def get_weather_simple():
         "humidity": 70,
         "timestamp": datetime.now()
     }
-
 
 @app.get("/xml")
 def get_xml():
@@ -55,34 +52,8 @@ def get_html():
 </html>
     """
 
-class Category(Enum):
-    TOOLS = 'tools'
-    CONSUMABLES = 'consumables'
 
-class Item(BaseModel):
-    name: str
-    price: float
-    count: int
-    id: int
-    category: Category
 
-items = {
-    0: Item(name='Hammer', price=9.99, count=20, id=0, category=Category.TOOLS),
-    1: Item(name='Pliers', price=5.99, count=20, id=1, category=Category.TOOLS),
-    2: Item(name='Nails', price=1.99, count=100, id=2, category=Category.CONSUMABLES)
-}
-
-@app.get('/items')
-def index() -> dict[str, dict[int, Item]]:
-    return {'items':items}
-
-@app.get('/items/{item_id}')
-def item_id(item_id:int) -> Item:
-    if item_id not in items:
-        raise HTTPException(
-            status_code=404, detail=f'Item with {item_id=} does not exist.'
-        )
-    return items[item_id]
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
