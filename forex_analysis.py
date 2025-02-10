@@ -20,12 +20,15 @@ data2=['date', 'hours', 'minutes', 'open', 'high', 'low', 'close']
 date=[]
 print(data2)
 
-for i in range(50):
+for i in range(100):
     content[i] = content[i].split(';')
     data1.append(content[i])
     date.append(content[i][0])
 # final_data.insert(0,'date',date,True)
 final_data = pd.DataFrame(data1)
-print(final_data)
+fd1 = final_data[6].replace(r',','.', regex=True)
+fd1=fd1.replace(r'\n','0', regex=True)
+print(fd1)
 # print(final_data['date'])
 print(data1[2][2])
+print(float(fd1[2])*2)
