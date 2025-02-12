@@ -53,7 +53,7 @@ close=model1.coef_[0]*open+model1.coef_[1]*high+model1.coef_[2]*low+model1.inter
 print(close)
 
 
-X=fd_numeric.iloc[:,2:]
+X=fd_numeric.iloc[:,2:5]
 y=fd_numeric['close']
 X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.2,random_state=1)
 
@@ -62,4 +62,22 @@ model2.fit(X_train,y_train)
 print(f'\n\n{model2.score(X_test, y_test)}\n\n')
 print(pd.DataFrame(model2.coef_, X.columns))
 
+fd_numeric['change'] = 0
+for i in range(len(fd_numeric['change'])-1):
+    i+=1
+    if fd_numeric.loc[i,'close']<fd_numeric.loc[i+1,'close']:
+        fd_numeric.loc[i,'change']=1
+print(fd_numeric)
 
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+# fd_numeric = fd_numeric.astype(float)
+X1 = fd_numeric.iloc[:,:-1]
+y1 = fd_numeric.change
+X_train1,X_test1,y_train1,  y_test1 = train_test_split(X1,y1,test_size=0.2)
+model2=LogisticRegression()
+# print(type(fd_numeric.change[2]))
+# print(len(y_train1))
+model2.fit(X_train1,y_train1)
+print(model2.score(X_test1,y_test1))
+print(pd.DataFrame(confusion_matrix(y_test1, model2.predict((X_test1)))))
