@@ -22,7 +22,7 @@ data2=['date', 'hours', 'minutes', 'open', 'high', 'low', 'close']
 date=[]
 # print(data2)
 
-for i in range(100):
+for i in range(1000):
     content[i] = content[i].split(';')
     data1.append(content[i])
     date.append(content[i])
@@ -74,10 +74,35 @@ from sklearn.metrics import confusion_matrix
 # fd_numeric = fd_numeric.astype(float)
 X1 = fd_numeric.iloc[:,:-1]
 y1 = fd_numeric.change
-X_train1,X_test1,y_train1,  y_test1 = train_test_split(X1,y1,test_size=0.2)
+X_train1,X_test1,y_train1,  y_test1 = train_test_split(X1,y1,test_size=0.2,random_state=42)
 model2=LogisticRegression()
 # print(type(fd_numeric.change[2]))
 # print(len(y_train1))
 model2.fit(X_train1,y_train1)
 print(model2.score(X_test1,y_test1))
 print(pd.DataFrame(confusion_matrix(y_test1, model2.predict((X_test1)))))
+
+fd_close = fd_numeric
+# fd_close = 0
+j=1
+k=1
+for i in range(990):
+    i+=1
+    fd_close.loc[k,j]= fd_close.loc[i,'close']
+    j+=1
+    if j==5:
+        j=1
+        k+=1
+
+fd_close = fd_close.drop(['open','high', 'low', 'close'], axis=1)
+fd_close.rename(columns={1:'close1', 2:'close2', 3:'close3', 4:'close4'}, inplace=True)
+fd_close = fd_close[['close1','close2', 'close3', 'close4','change']]
+
+for i in range(990):
+    i+=1
+    if fd_close.loc[i,'close4'] < fd_close.loc[i+1,'close1']:
+        fd_close.loc[i,'change'] = 1
+    else:
+        fd_close.loc[i, 'change'] = 0
+
+print(fd_close)
