@@ -105,4 +105,16 @@ for i in range(990):
     else:
         fd_close.loc[i, 'change'] = 0
 
-print(fd_close)
+
+fd_new  = fd_close[:247]
+print(fd_new)
+
+X2 = fd_new.iloc[:,:-1]
+y2 = fd_new.change
+X_train2,X_test2,y_train2,  y_test2 = train_test_split(X2,y2,test_size=0.2,random_state=42)
+model3=LogisticRegression()
+# print(type(fd_numeric.change[2]))
+# print(len(y_train1))
+model3.fit(X_train2,y_train2)
+print(model3.score(X_test2,y_test2))
+print(pd.DataFrame(confusion_matrix(y_test2, model3.predict((X_test2)))))
